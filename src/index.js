@@ -1,16 +1,33 @@
 const express = require('express');
+const {
+    filtrarProfessores,
+    encontrarUmProfessor
+} = require('./controladores/professores');
 
 const app = express();
 
-app.get('/usuarios', (req, res) => {
-    const array = [
-        { id: 11, nome: 'joao', idade: 23 },
-        { id: 2, nome: 'maria', idade: 18 },
-        { id: 4, nome: 'ana', idade: 30 },
-        { id: 1, nome: 'rodrigo', idade: 17 },
-        { id: 123, nome: 'rodrigo', idade: 17 }
-    ]
-    res.send(array);
-});
+const primeiroIntermediario = (req, res, next) => {
+    console.log('passei no primeiro intermediário');
+    next();
+}
+
+const segundoIntermediario = (req, res, next) => {
+    console.log('passei no segundo intermediário');
+    next();
+}
+
+const intermediarioDaRota = (req, res, next) => {
+    console.log('passei no intermediário da rota');
+    next();
+}
+
+// app.use(primeiroIntermediario);
+// app.use(segundoIntermediario);
+
+// localhost:3000/professores
+app.get('/professores', segundoIntermediario, intermediarioDaRota, filtrarProfessores);
+
+// localhost:3000/professores/2
+app.get('/professores/:id', encontrarUmProfessor);
 
 app.listen(3000);
